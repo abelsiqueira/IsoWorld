@@ -19,8 +19,9 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
+#include "map.h"
 
-const unsigned int constFps = 60;
+const unsigned int constFps = 1;
 
 int main () {
   ALLEGRO_DISPLAY *display;
@@ -43,35 +44,10 @@ int main () {
   al_register_event_source(eventQueue, al_get_timer_event_source(timer));
   al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
-  ALLEGRO_BITMAP *tileFile;
-  ALLEGRO_BITMAP *tile;
-  ALLEGRO_BITMAP *floor;
-
-  float tileVertical = 48.0; 
-  float tileHorizontal = tileVertical*4.0/3.0;
-  ALLEGRO_COLOR tileColor(al_map_rgb(50, 50, 50));
-
-  tileFile = al_load_bitmap("tileset.bmp");
-  al_convert_mask_to_alpha(tileFile, al_map_rgb(128, 128, 128));
-  al_convert_mask_to_alpha(tileFile, al_map_rgb(191, 123, 199));
-  tile = al_create_bitmap(2*tileHorizontal, 2*tileVertical);
-  floor= al_create_bitmap(1280, 720);
-
-  al_set_target_bitmap(tile);
-  al_draw_bitmap_region(tileFile, 2*tileHorizontal*4, 2*tileVertical*4, 
-      2*tileHorizontal, 2*tileVertical, 0, 0, 0);
-
-  al_set_target_bitmap(floor);
-  for (float x = 0.0; x <= 1280; x += 2*tileHorizontal) {
-    for (float y = 0.0; y <= 720; y += 2.0*tileVertical) {
-      al_draw_bitmap(tile, x, y, 0);
-      al_draw_bitmap(tile, x - tileHorizontal, y - tileVertical, 0);
-    }
-  }
-  al_set_target_bitmap(al_get_backbuffer(display));
-
   bool redraw = false;
   enum Keys { key_up, key_down, key_left, key_right };
+
+  Map map;
 
   al_clear_to_color(al_map_rgb(0, 0, 0));
   al_start_timer(timer);
@@ -99,14 +75,14 @@ int main () {
       redraw = false;
       al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
 
-      al_draw_bitmap(floor, 0, 0, 0);
-
+      map.Draw();
+      al_draw_line(0, 720/2, 1280, 720/2, al_map_rgb(255,0,0),1);
+      al_draw_line(1280/2, 0, 1280/2, 720, al_map_rgb(255,0,0),1);
 
       al_flip_display();
     }
   }
 
-  al_destroy_bitmap(tile);
   al_destroy_timer(timer);
   al_destroy_event_queue(eventQueue);
   al_destroy_display(display);
