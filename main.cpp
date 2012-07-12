@@ -47,7 +47,7 @@ int main () {
   bool redraw = false;
   enum Keys { key_up, key_down, key_left, key_right };
 
-  Map map;
+  Map map("Examples/ex1.map");
 
   al_clear_to_color(al_map_rgb(0, 0, 0));
   al_start_timer(timer);

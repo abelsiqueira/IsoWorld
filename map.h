@@ -7,7 +7,7 @@
 
 class Map {
   public:
-    Map ();
+    Map (const char * = 0);
     ~Map ();
 
     void Draw () const;
@@ -17,6 +17,7 @@ class Map {
     float windowWidth, windowHeight;
     char **map;
     ALLEGRO_BITMAP *land, *water;
+    ALLEGRO_BITMAP *border[8];
 };
 
 #endif
